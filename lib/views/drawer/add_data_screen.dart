@@ -1,5 +1,5 @@
-import 'package:efl_counter_flutter/utils/dimensions.dart';
-import 'package:efl_counter_flutter/widgets/top_map_selector.dart';
+import 'package:efl_counter/utils/dimensions.dart';
+import 'package:efl_counter/widgets/top_map_selector.dart';
 import 'package:flutter/material.dart';
 
 class AddDataScreen extends StatelessWidget {

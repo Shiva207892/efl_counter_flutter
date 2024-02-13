@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
-        android:label="efl_counter_flutter"
+        android:label="efl_counter"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

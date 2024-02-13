@@ -1,6 +1,6 @@
 {
-    "name": "efl_counter_flutter",
-    "short_name": "efl_counter_flutter",
+    "name": "efl_counter",
+    "short_name": "efl_counter",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

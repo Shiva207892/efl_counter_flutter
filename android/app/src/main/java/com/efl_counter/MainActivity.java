@@ -1,4 +1,4 @@
-package com.efl_counter.efl_counter_flutter;
+package com.efl_counter;
 
 import io.flutter.embedding.android.FlutterActivity;
 

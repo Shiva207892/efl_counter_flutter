@@ -1,8 +1,8 @@
-import 'package:efl_counter_flutter/controllers/app_controller.dart';
-import 'package:efl_counter_flutter/views/drawer/add_data_screen.dart';
-import 'package:efl_counter_flutter/views/drawer/contact_us_screen.dart';
-import 'package:efl_counter_flutter/views/drawer/profile_screen.dart';
-import 'package:efl_counter_flutter/widgets/custom_drawer.dart';
+import 'package:efl_counter/controllers/app_controller.dart';
+import 'package:efl_counter/views/drawer/add_data_screen.dart';
+import 'package:efl_counter/views/drawer/contact_us_screen.dart';
+import 'package:efl_counter/views/drawer/profile_screen.dart';
+import 'package:efl_counter/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../utils/app_colors.dart';

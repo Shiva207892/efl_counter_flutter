@@ -1,7 +1,11 @@
-import 'package:efl_counter_flutter/utils/app_colors.dart';
-import 'package:efl_counter_flutter/utils/app_pictures.dart';
-import 'package:efl_counter_flutter/widgets/base_gradient.dart';
-import 'package:efl_counter_flutter/widgets/custom_button.dart';
+import 'package:efl_counter/controllers/login_controller.dart';
+import 'package:efl_counter/utils/app_colors.dart';
+import 'package:efl_counter/utils/app_pictures.dart';
+import 'package:efl_counter/widgets/base_gradient.dart';
+import 'package:efl_counter/widgets/custom_button.dart';
+import 'package:efl_counter/widgets/custom_dialog.dart';
+import 'package:efl_counter/widgets/custom_snack_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,7 +18,35 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FocusNode currentNode = FocusNode();
+    final loginController = Get.put(LoginController());
+
+    var agreeText = GoogleFonts.inter(color: Colors.white54, fontSize: Dimensions.fontSizeDefault, fontWeight: FontWeight.w300);
+    var underLinedText = GoogleFonts.inter(color: Colors.orange.shade400,
+      fontSize: Dimensions.fontSizeLarge,
+      fontWeight: FontWeight.bold,
+      decoration: TextDecoration.underline);
+
+    void submit() {
+      if (loginController.phoneController.value.text == '') {
+        showCustomSnackbar(title: 'Mobile Number:', message: 'Please enter mobile number');
+        return;
+      } else if (loginController.phoneController.value.text.length != 10) {
+        showCustomSnackbar(title: 'Error', message: 'Enter complete phone number please');
+        return;
+      }
+      else if (loginController.phoneController.value.text.length == 10) {
+        showCustomDialogTwoActioned(
+            context,
+            'We will be verifying the phone number:',
+            '+91 ${loginController.phoneController.value.text}\n\n Is this OK, or would you like to edit the number?',
+            'CONFIRM', () {
+          Navigator.of(context).pop();
+          loginController.isOtpRequested.value = true;
+          getOtp(context, loginController.phoneController.value.text);
+        },
+            'EDIT', () => Navigator.of(context).pop());
+      }
+    }
 
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
@@ -29,17 +61,34 @@ class LoginScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(Dimensions.paddingSizeLargest),
                 child: Column(
                   children: [
-                    Text('Login', style: GoogleFonts.inter(fontSize: Dimensions.fontSizeLargest, color: Colors.white)),
+                    Text('Login',
+                        style: GoogleFonts.inter(
+                            fontSize: Dimensions.fontSizeLargest,
+                            color: Colors.white)),
                     const SizedBox(height: Dimensions.paddingSizeDefault),
-                    Text('Enter your mobile number to continue.', style: GoogleFonts.inter(fontSize: Dimensions.fontSizeLarge, color: Colors.white, fontWeight: FontWeight.w300)),
+                    Text('Enter your mobile number to continue.',
+                        style: GoogleFonts.inter(color: Colors.white, fontSize: Dimensions.fontSizeLarge, fontWeight: FontWeight.w300)),
                     const SizedBox(height: Dimensions.paddingSizeLargest),
-                    CustomTextField(focusNode: currentNode, hintText: 'Enter your mobile number', prefixImage: AppPictures.phoneIcon),
-                    Container(
-                        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.2),
-                        child: CustomButton(buttonText: 'Verify', onTap: () {
-                          print('verify phhone');
-                          Get.toNamed('/otp');
-                        })),
+                    Obx(
+                        () => CustomTextField(
+                          controller: loginController.phoneController.value,
+                          enabled: true,
+                          hintText: 'Enter your mobile number',
+                          prefixImage: AppPictures.phoneIcon,
+                          keyboard: TextInputType.phone,
+                          maxLength: 10,
+                          fillColor: Colors.white),
+                    ),
+
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+                    Obx(
+                        () => loginController.isOtpRequested.isTrue ? const LinearProgressIndicator(color: AppColors.primaryColor,) : CustomButton(
+                              buttonText: 'Verify',
+                              onTap: submit),
+                    ),
+
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.1)
+
                   ],
                 ),
               )
@@ -47,6 +96,66 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
       )),
+      // bottomNavigationBar: Padding(
+      //   padding: const EdgeInsets.all(8.0),
+      //   child: Column(
+      //     mainAxisSize: MainAxisSize.min,
+      //     children: [
+      //     Text('By continue you agree to our privacy & terms and conditions.',
+      //         style: agreeText),
+      //
+      //     Row(
+      //       children: [
+      //         Text('I agree with ', style: agreeText),
+      //         InkWell(
+      //             onTap: () {
+      //               if(!isOtpRequested){
+      //                 Get.toNamed('/privacy_policy');
+      //               }
+      //             },
+      //             child:
+      //             Text('Privacy Policy', style: underLinedText))
+      //       ],
+      //     ),
+      //     Row(
+      //       children: [
+      //         Text('I agree with ', style: agreeText),
+      //         InkWell(
+      //             onTap: () {
+      //               if(!isOtpRequested) {
+      //                 Get.toNamed('/terms_conditions');
+      //               }
+      //             },
+      //             child: Text('Terms & Conditions',
+      //                 style: underLinedText))
+      //       ],
+      //     ),
+      //   ],),
+      // ),
+    );
+  }
+
+  getOtp(BuildContext context, String phoneNumber) async {
+    String phone = '+91$phoneNumber';
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: phone,
+      verificationCompleted: (PhoneAuthCredential credential) {},
+      verificationFailed: (FirebaseAuthException e) {
+        if (e.code == 'invalid-phone-number') {
+          showCustomSnackbar(title: 'Invalid Number',
+              message: 'The provided phone number is not valid.');
+        }
+      },
+      codeSent: (String verificationid, int? resendtoken) {
+        Get.toNamed('/otp', parameters: {
+          'phoneNumber': phone,
+          'verificationId': verificationid
+        });
+      },
+      timeout: const Duration(seconds: 120),
+      codeAutoRetrievalTimeout: (String verificationId) {
+        print('Code retrieval timed out.....');
+      },
     );
   }
 }

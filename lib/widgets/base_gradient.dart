@@ -1,4 +1,4 @@
-import 'package:efl_counter_flutter/utils/app_colors.dart';
+import 'package:efl_counter/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 Container baseGradientContainer(BuildContext context, Widget child) {

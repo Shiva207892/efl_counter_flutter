@@ -1,4 +1,4 @@
-import 'package:efl_counter_flutter/controllers/app_controller.dart';
+import 'package:efl_counter/controllers/app_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

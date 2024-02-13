@@ -1,29 +1,58 @@
-import 'package:efl_counter_flutter/controllers/app_controller.dart';
-import 'package:efl_counter_flutter/utils/app_colors.dart';
-import 'package:efl_counter_flutter/views/authentication/login_screen.dart';
-import 'package:efl_counter_flutter/views/authentication/otp_screen.dart';
-import 'package:efl_counter_flutter/views/dashboard/home_screen.dart';
-import 'package:efl_counter_flutter/views/drawer/add_data_screen.dart';
-import 'package:efl_counter_flutter/views/drawer/contact_us_screen.dart';
-import 'package:efl_counter_flutter/views/drawer/profile_screen.dart';
+import 'package:efl_counter/controllers/app_controller.dart';
+import 'package:efl_counter/utils/app_colors.dart';
+import 'package:efl_counter/views/authentication/login_screen.dart';
+import 'package:efl_counter/views/authentication/otp_screen.dart';
+import 'package:efl_counter/views/dashboard/home_screen.dart';
+import 'package:efl_counter/views/drawer/add_data_screen.dart';
+import 'package:efl_counter/views/drawer/contact_us_screen.dart';
+import 'package:efl_counter/views/drawer/privacy_policy_screen.dart';
+import 'package:efl_counter/views/drawer/profile_screen.dart';
+import 'package:efl_counter/views/drawer/terms_conditions_screen.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-
 import 'controllers/add_data_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await Firebase.initializeApp();
+
+  if (kDebugMode) {
+    print('firebase has been initialized');
+  }
+
+  await FirebaseAppCheck.instance.activate(
+    // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
+    // argument for `webProvider`
+    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+    // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
+    // your preferred provider. Choose from:
+    // 1. Debug provider
+    // 2. Safety Net provider
+    // 3. Play Integrity provider
+    androidProvider:
+        kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
+    // Default provider for iOS/macOS is the Device Check provider. You can use the "AppleProvider" enum to choose
+    // your preferred provider. Choose from:
+    // 1. Debug provider
+    // 2. Device Check provider
+    // 3. App Attest provider
+    // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
+    appleProvider: kDebugMode ? AppleProvider.debug : AppleProvider.deviceCheck,
+  );
+
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   // Set the status bar and navigation bar colors
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: AppColors.primaryColor,
-    statusBarIconBrightness: Brightness.light,
-    statusBarBrightness: Brightness.light,
-    systemNavigationBarColor: AppColors.primaryColor
-  ));
+      statusBarColor: AppColors.primaryColor,
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.light,
+      systemNavigationBarColor: AppColors.primaryColor));
 
   Get.put(AppController());
   Get.put(AddDataController());
@@ -53,7 +82,11 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/add_data', page: () => const AddDataScreen()),
         GetPage(name: '/profile', page: () => const ProfileScreen()),
         GetPage(name: '/contact_us', page: () => const ContactUsScreen()),
-        // GetPage(name: '/terms_conditions', page: () => TermsConditionsPage()),
+        GetPage(
+            name: '/privacy_policy', page: () => const PrivacyPolicyScreen()),
+        GetPage(
+            name: '/terms_conditions',
+            page: () => const TermsConditionsScreen()),
         // GetPage(name: '/register_success', page: () => RegisterSuccessPage()),
         // GetPage(name: '/bottom_home', page: () => MyBottomNavigationPage()),
         // GetPage(name: '/order_confirm', page: () => OrderConfirmationPage()),

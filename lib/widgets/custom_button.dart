@@ -1,5 +1,5 @@
-import 'package:efl_counter_flutter/utils/app_colors.dart';
-import 'package:efl_counter_flutter/utils/dimensions.dart';
+import 'package:efl_counter/utils/app_colors.dart';
+import 'package:efl_counter/utils/dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

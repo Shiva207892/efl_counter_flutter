@@ -1,4 +1,4 @@
-# efl_counter_flutter
+# efl_counter
 
 A new Flutter project.
 
