@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:efl_counter/controllers/login_controller.dart';
 import 'package:efl_counter/utils/app_colors.dart';
 import 'package:efl_counter/utils/app_pictures.dart';
@@ -20,21 +22,18 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final loginController = Get.put(LoginController());
 
-    var agreeText = GoogleFonts.inter(color: Colors.white54, fontSize: Dimensions.fontSizeDefault, fontWeight: FontWeight.w300);
-    var underLinedText = GoogleFonts.inter(color: Colors.orange.shade400,
-      fontSize: Dimensions.fontSizeLarge,
-      fontWeight: FontWeight.bold,
-      decoration: TextDecoration.underline);
+    var agreeText = GoogleFonts.inter(
+        color: Colors.white54,
+        fontSize: Dimensions.fontSizeDefault,
+        fontWeight: FontWeight.w300);
+    var underLinedText = GoogleFonts.inter(
+        color: Colors.orange.shade400,
+        fontSize: Dimensions.fontSizeLarge,
+        fontWeight: FontWeight.bold,
+        decoration: TextDecoration.underline);
 
     void submit() {
-      if (loginController.phoneController.value.text == '') {
-        showCustomSnackbar(title: 'Mobile Number:', message: 'Please enter mobile number');
-        return;
-      } else if (loginController.phoneController.value.text.length != 10) {
-        showCustomSnackbar(title: 'Error', message: 'Enter complete phone number please');
-        return;
-      }
-      else if (loginController.phoneController.value.text.length == 10) {
+      if (loginController.phoneController.value.text.length == 10) {
         showCustomDialogTwoActioned(
             context,
             'We will be verifying the phone number:',
@@ -43,8 +42,12 @@ class LoginScreen extends StatelessWidget {
           Navigator.of(context).pop();
           loginController.isOtpRequested.value = true;
           getOtp(context, loginController.phoneController.value.text);
-        },
-            'EDIT', () => Navigator.of(context).pop());
+        }, 'EDIT', () => Navigator.of(context).pop());
+      } else {
+        showCustomSnackbar(
+            title: 'Error',
+            message: 'Enter complete phone number please',
+            duration: const Duration(seconds: 1));
       }
     }
 
@@ -67,28 +70,30 @@ class LoginScreen extends StatelessWidget {
                             color: Colors.white)),
                     const SizedBox(height: Dimensions.paddingSizeDefault),
                     Text('Enter your mobile number to continue.',
-                        style: GoogleFonts.inter(color: Colors.white, fontSize: Dimensions.fontSizeLarge, fontWeight: FontWeight.w300)),
+                        style: GoogleFonts.inter(
+                            color: Colors.white,
+                            fontSize: Dimensions.fontSizeLarge,
+                            fontWeight: FontWeight.w300)),
                     const SizedBox(height: Dimensions.paddingSizeLargest),
                     Obx(
-                        () => CustomTextField(
+                      () => CustomTextField(
                           controller: loginController.phoneController.value,
-                          enabled: true,
+                          enabled: loginController.isOtpRequested.isFalse,
                           hintText: 'Enter your mobile number',
                           prefixImage: AppPictures.phoneIcon,
                           keyboard: TextInputType.phone,
                           maxLength: 10,
                           fillColor: Colors.white),
                     ),
-
                     SizedBox(height: MediaQuery.of(context).size.height * 0.2),
                     Obx(
-                        () => loginController.isOtpRequested.isTrue ? const LinearProgressIndicator(color: AppColors.primaryColor,) : CustomButton(
-                              buttonText: 'Verify',
-                              onTap: submit),
+                      () => loginController.isOtpRequested.isTrue
+                          ? const CircularProgressIndicator(
+                              color: AppColors.primaryColor,
+                            )
+                          : CustomButton(buttonText: 'Verify', onTap: submit),
                     ),
-
                     SizedBox(height: MediaQuery.of(context).size.height * 0.1)
-
                   ],
                 ),
               )
@@ -136,21 +141,25 @@ class LoginScreen extends StatelessWidget {
   }
 
   getOtp(BuildContext context, String phoneNumber) async {
+    final loginController = Get.find<LoginController>();
+
     String phone = '+91$phoneNumber';
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: phone,
-      verificationCompleted: (PhoneAuthCredential credential) {},
+      verificationCompleted: (PhoneAuthCredential credential) {
+        loginController.loginOtp.value = credential.smsCode!;
+        loginController.loginVerificationId.value = credential.verificationId!;
+      },
       verificationFailed: (FirebaseAuthException e) {
         if (e.code == 'invalid-phone-number') {
-          showCustomSnackbar(title: 'Invalid Number',
+          showCustomSnackbar(
+              title: 'Invalid Number',
               message: 'The provided phone number is not valid.');
         }
       },
       codeSent: (String verificationid, int? resendtoken) {
-        Get.toNamed('/otp', parameters: {
-          'phoneNumber': phone,
-          'verificationId': verificationid
-        });
+        loginController.loginVerificationId.value = verificationid;
+        Get.toNamed('/otp');
       },
       timeout: const Duration(seconds: 120),
       codeAutoRetrievalTimeout: (String verificationId) {

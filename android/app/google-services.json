@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "471536516748",
+    "project_id": "electric-fuel-counter",
+    "storage_bucket": "electric-fuel-counter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:471536516748:android:288f4f7425a952faf345a9",
+        "android_client_info": {
+          "package_name": "com.efl_counter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "471536516748-cnmh5fddfsup3rsu1noc2ejglr0ntpc6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.efl_counter",
+            "certificate_hash": "91a9a9abbc6a146ccb0e34544f827f0db0e28462"
+          }
+        },
+        {
+          "client_id": "471536516748-21qk4kmejgsvkkpje1kbkdtk0gpck8vd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEftyEk-M2YI3X3QBgtP90e36hhkMIzng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "471536516748-21qk4kmejgsvkkpje1kbkdtk0gpck8vd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

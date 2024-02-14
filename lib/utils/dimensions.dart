@@ -7,6 +7,7 @@ class Dimensions {
   static const fontSizeLargest = 24.0;
 
   //paddings
+  static const paddingSizeSmall = 5.0;
   static const paddingSizeDefault = 8.0;
   static const paddingSizeLarge = 12.0;
   static const paddingSizeExtraLarge = 16.0;

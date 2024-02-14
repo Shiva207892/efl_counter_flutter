@@ -1,7 +1,9 @@
 import 'package:efl_counter/controllers/app_controller.dart';
+import 'package:efl_counter/controllers/profile_controller.dart';
 import 'package:efl_counter/utils/app_colors.dart';
 import 'package:efl_counter/views/authentication/login_screen.dart';
 import 'package:efl_counter/views/authentication/otp_screen.dart';
+import 'package:efl_counter/views/authentication/splash_screen.dart';
 import 'package:efl_counter/views/dashboard/home_screen.dart';
 import 'package:efl_counter/views/drawer/add_data_screen.dart';
 import 'package:efl_counter/views/drawer/contact_us_screen.dart';
@@ -15,11 +17,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'controllers/add_data_controller.dart';
+import 'controllers/user_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: const FirebaseOptions(apiKey:'AIzaSyDCnNwKUUm2EqtNOmpWmXUGDzdtEPmdhfs',appId:'1:471536516748:android:288f4f7425a952faf345a9',messagingSenderId:'471536516748',projectId:'electric-fuel-counter'));
 
   if (kDebugMode) {
     print('firebase has been initialized');
@@ -54,6 +57,8 @@ Future<void> main() async {
       statusBarBrightness: Brightness.light,
       systemNavigationBarColor: AppColors.primaryColor));
 
+  Get.put(UserController());
+  Get.put(ProfileController());
   Get.put(AppController());
   Get.put(AddDataController());
 
@@ -74,8 +79,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       defaultTransition: Transition.zoom,
-      initialRoute: '/login',
+      initialRoute: '/',
       getPages: [
+        GetPage(name: '/', page: () => const SplashScreen()),
         GetPage(name: '/login', page: () => const LoginScreen()),
         GetPage(name: '/otp', page: () => const OtpScreen()),
         GetPage(name: '/home', page: () => const HomeScreen()),

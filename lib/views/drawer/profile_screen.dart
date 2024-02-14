@@ -1,3 +1,5 @@
+import 'package:efl_counter/controllers/profile_controller.dart';
+import 'package:efl_counter/controllers/user_controller.dart';
 import 'package:efl_counter/utils/dimensions.dart';
 import 'package:efl_counter/widgets/base_gradient.dart';
 import 'package:efl_counter/widgets/custom_text_field.dart';
@@ -14,6 +16,11 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userController = Get.find<UserController>();
+    final profileController = Get.find<ProfileController>();
+
+    profileController.getProfileData();
+
     var normalFontStyle = GoogleFonts.inter(
         color: AppColors.primaryColor,
         fontWeight: FontWeight.bold,
@@ -42,23 +49,72 @@ class ProfileScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(
-                            child: Text(
-                          'My Profile',
-                          style: GoogleFonts.inter(
-                              color: AppColors.primaryColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: Dimensions.fontSizeExtraLarge),
-                        )),
+                        userController.userStatus.value == 'pending'
+                            ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                InkWell(
+                                    onTap: () => userController.logoutUser(),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(
+                                          Dimensions.paddingSizeDefault),
+                                      child: Text('Logout',
+                                          style: GoogleFonts.inter(
+                                              color: AppColors.primaryColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: Dimensions.fontSizeDefault)),
+                                    ),
+                                  ),
+                                Text('Pending',
+                                    style: GoogleFonts.inter(
+                                        color: AppColors.pendingColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: Dimensions.fontSizeDefault))
+                              ],
+                            )
+                            : const SizedBox(),
                         const SizedBox(height: Dimensions.paddingSizeDefault),
-                        profileImage(120, true),
+                        profileNameImage(120, true),
+                        const SizedBox(height: Dimensions.paddingSizeDefault),
+                        Text('Phone', style: normalFontStyle),
+                        Obx(
+                          () => CustomTextField(
+                              enabled: false,
+                              controller:
+                                  profileController.phoneController.value,
+                              hintText: 'Phone',
+                              keyboard: TextInputType.number),
+                        ),
+                        const SizedBox(height: Dimensions.paddingSizeDefault),
                         Text('First Name', style: normalFontStyle),
-                        const CustomTextField(enabled: true,
-                            hintText: 'First Name', keyboard: TextInputType.name),
+                        Obx(
+                          () => CustomTextField(
+                              enabled: true,
+                              controller:
+                                  profileController.fNameController.value,
+                              hintText: 'First Name',
+                              keyboard: TextInputType.name),
+                        ),
                         const SizedBox(height: Dimensions.paddingSizeDefault),
                         Text('Last Name', style: normalFontStyle),
+                        Obx(
+                          () => CustomTextField(
+                              enabled: true,
+                              controller:
+                                  profileController.lNameController.value,
+                              hintText: 'Last Name',
+                              keyboard: TextInputType.name),
+                        ),
+                        const SizedBox(height: Dimensions.paddingSizeDefault),
                         Text('Email Address', style: normalFontStyle),
-                        Text('Phone Number', style: normalFontStyle),
+                        Obx(
+                          () => CustomTextField(
+                              enabled: true,
+                              controller:
+                                  profileController.emailController.value,
+                              hintText: 'Email Address',
+                              keyboard: TextInputType.emailAddress),
+                        ),
+                        const SizedBox(height: Dimensions.paddingSizeDefault),
                         const Text('State'),
                         const Text('City'),
                         CustomButton(
@@ -66,7 +122,7 @@ class ProfileScreen extends StatelessWidget {
                             onTap: () {
                               print('update profile');
                               Get.toNamed('/home');
-                            })
+                            }),
                       ],
                     ),
                   ),
