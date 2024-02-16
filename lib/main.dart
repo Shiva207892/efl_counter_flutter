@@ -1,5 +1,4 @@
 import 'package:efl_counter/controllers/app_controller.dart';
-import 'package:efl_counter/controllers/profile_controller.dart';
 import 'package:efl_counter/utils/app_colors.dart';
 import 'package:efl_counter/views/authentication/login_screen.dart';
 import 'package:efl_counter/views/authentication/otp_screen.dart';
@@ -58,11 +57,45 @@ Future<void> main() async {
       systemNavigationBarColor: AppColors.primaryColor));
 
   Get.put(UserController());
-  Get.put(ProfileController());
   Get.put(AppController());
   Get.put(AddDataController());
 
+  // Adding WidgetsBindingObserver
+  WidgetsBinding.instance.addObserver(AppLifecycleObserver());
+
   runApp(const MyApp());
+}
+
+class AppLifecycleObserver extends WidgetsBindingObserver {
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+
+    final userController = Get.find<UserController>();
+
+    // Handle app lifecycle state changes here
+    switch (state) {
+      case AppLifecycleState.resumed:
+      // App is resumed
+        await userController.updateUserOnline(true);
+        break;
+      case AppLifecycleState.inactive:
+      // App is inactive
+        await userController.updateUserOnline(false);
+        break;
+      case AppLifecycleState.paused:
+      // App is paused
+        await userController.updateUserOnline(false);
+        break;
+      case AppLifecycleState.detached:
+      // App is detached
+        await userController.updateUserOnline(false);
+        break;
+      case AppLifecycleState.hidden:
+        await userController.updateUserOnline(true);
+        break;
+    }
+  }
 }
 
 class MyApp extends StatelessWidget {

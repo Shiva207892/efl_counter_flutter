@@ -11,19 +11,16 @@ class SplashScreen extends StatelessWidget {
 
     userController.getUserData();
 
-    return Scaffold(
+    return const Scaffold(
       body: SafeArea(
         child: SizedBox.expand(
-          child: Obx(
-            () => Column(
+          child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('User is: ${userController.isLoggedIn.isTrue ? 'Login' : 'Logout'}'),
-                Text('User ID: ${userController.userId.value}'),
+                CircularProgressIndicator(color: Colors.green)
               ],
             ),
-          ),
         ),
       ),
     );
