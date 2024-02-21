@@ -31,6 +31,8 @@ class AppPictures {
 
   static const profileIcon = "images/profile_icon.png";
 
+  static const approveIcon = "images/approve_icon.png";
+
   static const contactIcon = "images/contact_icon.png";
 
   static const submittedIcon = "images/submit_icon.png";

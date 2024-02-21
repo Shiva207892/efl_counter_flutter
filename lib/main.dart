@@ -1,3 +1,4 @@
+import 'package:efl_counter/configs/firebase_options.dart';
 import 'package:efl_counter/controllers/app_controller.dart';
 import 'package:efl_counter/utils/app_colors.dart';
 import 'package:efl_counter/views/authentication/login_screen.dart';
@@ -8,6 +9,7 @@ import 'package:efl_counter/views/drawer/add_data_screen.dart';
 import 'package:efl_counter/views/drawer/contact_us_screen.dart';
 import 'package:efl_counter/views/drawer/privacy_policy_screen.dart';
 import 'package:efl_counter/views/drawer/profile_screen.dart';
+import 'package:efl_counter/views/drawer/report_success_screen.dart';
 import 'package:efl_counter/views/drawer/terms_conditions_screen.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,7 +23,7 @@ import 'controllers/user_controller.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(options: const FirebaseOptions(apiKey:'AIzaSyDCnNwKUUm2EqtNOmpWmXUGDzdtEPmdhfs',appId:'1:471536516748:android:288f4f7425a952faf345a9',messagingSenderId:'471536516748',projectId:'electric-fuel-counter'));
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   if (kDebugMode) {
     print('firebase has been initialized');
@@ -77,22 +79,27 @@ class AppLifecycleObserver extends WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.resumed:
       // App is resumed
+      print('app resumed');
         await userController.updateUserOnline(true);
         break;
       case AppLifecycleState.inactive:
       // App is inactive
+      print('app inactive');
         await userController.updateUserOnline(false);
         break;
       case AppLifecycleState.paused:
       // App is paused
+      print('app paused');
         await userController.updateUserOnline(false);
         break;
       case AppLifecycleState.detached:
       // App is detached
+      print('app terminated');
         await userController.updateUserOnline(false);
         break;
       case AppLifecycleState.hidden:
-        await userController.updateUserOnline(true);
+        print('app hidden');
+        await userController.updateUserOnline(false);
         break;
     }
   }
@@ -121,6 +128,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/add_data', page: () => const AddDataScreen()),
         GetPage(name: '/profile', page: () => const ProfileScreen()),
         GetPage(name: '/contact_us', page: () => const ContactUsScreen()),
+        GetPage(name: '/report_success', page: () => const ReportSuccessScreen()),
         GetPage(
             name: '/privacy_policy', page: () => const PrivacyPolicyScreen()),
         GetPage(

@@ -37,6 +37,7 @@ dependencies:
   firebase_auth:
   firebase_core:
   cloud_firestore:
+  firebase_storage:
   firebase_messaging:
   firebase_crashlytics:
   firebase_app_check:
@@ -49,6 +50,8 @@ dependencies:
   pinput:
   intl:
   shared_preferences:
+  cached_network_image:
+  dropdown_button2:
 
 dev_dependencies:
   flutter_test:
