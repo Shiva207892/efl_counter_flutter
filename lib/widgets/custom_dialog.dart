@@ -33,6 +33,3 @@ void showCustomDialogTwoActioned(BuildContext context, String title, String mess
     },
   );
 }
-
-class FlatButton {
-}

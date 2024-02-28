@@ -1,7 +1,7 @@
+import 'package:efl_counter/common/styles.dart';
 import 'package:efl_counter/utils/app_colors.dart';
 import 'package:efl_counter/utils/dimensions.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class CustomButton extends StatelessWidget {
   final double? buttonHeight;
@@ -29,10 +29,7 @@ class CustomButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(50)),
         child: Center(
           child: Text(buttonText,
-              style: GoogleFonts.inter(
-                color: buttonTextColor ?? Colors.white,
-                fontSize: buttonTextSize ?? Dimensions.fontSizeExtraLarge
-              )),
+              style: poppinsBold.copyWith(color: Colors.white.withOpacity(.5), fontSize: Dimensions.fontSizeExtraLarge)),
         ),
       ),
     );

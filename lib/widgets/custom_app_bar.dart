@@ -1,18 +1,18 @@
+import 'package:efl_counter/common/styles.dart';
 import 'package:efl_counter/controllers/app_controller.dart';
 import 'package:efl_counter/utils/app_colors.dart';
 import 'package:efl_counter/utils/app_pictures.dart';
 import 'package:efl_counter/utils/dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 Future<void> _selectDate(BuildContext context) async {
   final DateTime? picked = await showDatePicker(
     context: context,
     initialDate: DateTime.now(), // Initial date
-    firstDate: DateTime(2020), // First selectable date
-    lastDate: DateTime(2100), // Last selectable date
+    firstDate: DateTime(2024), // First selectable date
+    lastDate: DateTime.now(), // Last selectable date
     // Optional: You can customize the date picker further using additional parameters
     // For example: initialDatePickerMode, selectableDayPredicate, etc.
   );
@@ -37,24 +37,20 @@ AppBar customAppBar(BuildContext context) {
           onTap: () => appController.decrementDate(),
           child: Text(
             '  <  ',
-            style: GoogleFonts.inter(
-                fontWeight: FontWeight.bold,
-                fontSize: Dimensions.fontSizeLargest,
-                color: Colors.white),
+            style: poppinsBold.copyWith(fontSize: Dimensions.fontSizeLargest, fontWeight: FontWeight.bold, color: Colors.white),
           ),
         ),
         FittedBox(
           child: Text(
               DateFormat('EEEE, dd MMMM')
                   .format(appController.currentSelectedDate.value),
-              style: GoogleFonts.inter(
-                  fontSize: Dimensions.fontSizeLarge, color: Colors.white)),
+              style: poppinsBold.copyWith(color: Colors.white, fontSize: Dimensions.fontSizeDefault)),
         ),
         InkWell(
           onTap: () => appController.incrementDate(),
           child: Text(
             '  >  ',
-            style: GoogleFonts.inter(
+            style: poppinsBold.copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: Dimensions.fontSizeLargest,
                 color: Colors.white),
@@ -70,8 +66,8 @@ AppBar customAppBar(BuildContext context) {
           child: Image.asset(
             AppPictures.calendarIcon,
             color: Colors.white,
-            width: 30,
-            height: 30,
+            width: 25,
+            height: 25,
           )),
       const SizedBox(
         width: Dimensions.paddingSizeLargest,

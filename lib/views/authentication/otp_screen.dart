@@ -85,7 +85,7 @@ class OtpScreen extends StatelessWidget {
                         pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
                         showCursor: true,
                         onCompleted: (pin) =>
-                            loginController.verifyOTPCode(context),
+                            loginController.loginOtp.value = pin,
                       ),
                       Container(
                           margin: EdgeInsets.only(

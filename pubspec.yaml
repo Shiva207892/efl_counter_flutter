@@ -44,6 +44,7 @@ dependencies:
   sms_autofill:
   image_picker:
   fluttertoast:
+  connectivity_plus:
   image_cropper:
   get:
   google_fonts:

@@ -5,7 +5,7 @@ import 'package:efl_counter/views/authentication/login_screen.dart';
 import 'package:efl_counter/views/authentication/otp_screen.dart';
 import 'package:efl_counter/views/authentication/splash_screen.dart';
 import 'package:efl_counter/views/dashboard/home_screen.dart';
-import 'package:efl_counter/views/drawer/add_data_screen.dart';
+import 'package:efl_counter/views/screens/add_data_screen.dart';
 import 'package:efl_counter/views/drawer/contact_us_screen.dart';
 import 'package:efl_counter/views/drawer/privacy_policy_screen.dart';
 import 'package:efl_counter/views/drawer/profile_screen.dart';

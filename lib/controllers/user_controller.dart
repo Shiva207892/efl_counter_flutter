@@ -22,6 +22,7 @@ class UserController extends GetxController {
   RxString userPhone = ''.obs;
   RxString userStatus = ''.obs;
   RxString userAddress = ''.obs;
+  RxList<String> userHubs = <String>[].obs;
 
   var usersCollection = FirebaseFirestore.instance.collection('Users');
   late StreamSubscription<DocumentSnapshot> _userSubscription;
@@ -63,6 +64,8 @@ class UserController extends GetxController {
             userLastName.value = userData['lname'] ?? '';
             userEmail.value = userData['email'] ?? '';
             userAddress.value = userData['address'] ?? '';
+            userHubs.value = (userData['hubs'] as List<dynamic>).cast<String>();
+
             if (userData['status'] == 'Pending') {
               if (Get.currentRoute != '/profile') {
                 Get.offAllNamed(
