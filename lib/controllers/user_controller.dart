@@ -42,7 +42,7 @@ class UserController extends GetxController {
     super.onClose();
   }
 
-  Future<void> getUserData() async {
+  Future<bool?> getUserData() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
 
@@ -65,27 +65,6 @@ class UserController extends GetxController {
             userEmail.value = userData['email'] ?? '';
             userAddress.value = userData['address'] ?? '';
             userHubs.value = (userData['hubs'] as List<dynamic>).cast<String>();
-
-            if (userData['status'] == 'Pending') {
-              if (Get.currentRoute != '/profile') {
-                Get.offAllNamed(
-                  '/profile',
-                  parameters: {
-                    'phone': userPhone.value,
-                    'photo': userPhoto.value,
-                    'status': userStatus.value,
-                    'firstName': userFirstName.value,
-                    'lastName': userLastName.value,
-                    'email': userEmail.value,
-                    'address': userAddress.value,
-                  },
-                );
-              }
-            } else {
-              if (Get.currentRoute != '/home') {
-                Get.offAllNamed('/home');
-              }
-            }
           } else {
             if (kDebugMode) {
               print('User with ID $userId does not exist.');
@@ -94,17 +73,20 @@ class UserController extends GetxController {
             FirebaseAuth.instance.signOut();
           }
         });
+        return true;
       } else {
         if (kDebugMode) {
           print("User not signed in.");
-          Future.delayed(Duration.zero, () => Get.toNamed('/login'));
+          return false;
         }
       }
     } catch (e) {
       if (kDebugMode) {
         print('Failed to get user: $e');
+        return false;
       }
     }
+    return null;
   }
 
   Future<void> addUserData() async {
