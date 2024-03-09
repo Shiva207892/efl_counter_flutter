@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../common/shared_prefs.dart';
 import '../widgets/custom_snack_bar.dart';
 
 class UserController extends GetxController {
@@ -258,7 +257,6 @@ class UserController extends GetxController {
   Future<void> logoutUser() async {
     try {
       await updateUserOnline(false);
-      await SharedPrefs.clearPreferences();
       await FirebaseAuth.instance.signOut();
       if (kDebugMode) {
         print("User signed out");

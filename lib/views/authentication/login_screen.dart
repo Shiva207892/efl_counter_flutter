@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import 'package:efl_counter/common/route_helper.dart';
 import 'package:efl_counter/controllers/login_controller.dart';
 import 'package:efl_counter/utils/app_colors.dart';
 import 'package:efl_counter/utils/app_pictures.dart';
@@ -159,7 +158,7 @@ class LoginScreen extends StatelessWidget {
       },
       codeSent: (String verificationid, int? resendtoken) {
         loginController.loginVerificationId.value = verificationid;
-        Get.toNamed('/otp');
+        Get.toNamed(RouteHelper.otp);
       },
       timeout: const Duration(seconds: 120),
       codeAutoRetrievalTimeout: (String verificationId) {

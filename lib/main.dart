@@ -1,27 +1,21 @@
+import 'package:efl_counter/common/route_helper.dart';
 import 'package:efl_counter/configs/firebase_options.dart';
 import 'package:efl_counter/controllers/app_controller.dart';
 import 'package:efl_counter/utils/app_colors.dart';
-import 'package:efl_counter/views/authentication/login_screen.dart';
-import 'package:efl_counter/views/authentication/otp_screen.dart';
-import 'package:efl_counter/views/authentication/splash_screen.dart';
-import 'package:efl_counter/views/dashboard/home_screen.dart';
-import 'package:efl_counter/views/screens/add_data_screen.dart';
-import 'package:efl_counter/views/drawer/contact_us_screen.dart';
-import 'package:efl_counter/views/drawer/privacy_policy_screen.dart';
-import 'package:efl_counter/views/drawer/profile_screen.dart';
-import 'package:efl_counter/views/drawer/report_success_screen.dart';
-import 'package:efl_counter/views/drawer/terms_conditions_screen.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'controllers/add_data_controller.dart';
 import 'controllers/user_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await GetStorage.init();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
@@ -113,33 +107,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'EFL Counter',
       theme: ThemeData(
         colorSchemeSeed: AppColors.primaryColor,
         useMaterial3: true,
       ),
       defaultTransition: Transition.zoom,
-      initialRoute: '/',
-      getPages: [
-        GetPage(name: '/', page: () => const SplashScreen()),
-        GetPage(name: '/login', page: () => const LoginScreen()),
-        GetPage(name: '/otp', page: () => const OtpScreen()),
-        GetPage(name: '/home', page: () => const HomeScreen()),
-        GetPage(name: '/add_data', page: () => const AddDataScreen()),
-        GetPage(name: '/profile', page: () => const ProfileScreen()),
-        GetPage(name: '/contact_us', page: () => const ContactUsScreen()),
-        GetPage(name: '/report_success', page: () => const ReportSuccessScreen()),
-        GetPage(
-            name: '/privacy_policy', page: () => const PrivacyPolicyScreen()),
-        GetPage(
-            name: '/terms_conditions',
-            page: () => const TermsConditionsScreen()),
-        // GetPage(name: '/register_success', page: () => RegisterSuccessPage()),
-        // GetPage(name: '/bottom_home', page: () => MyBottomNavigationPage()),
-        // GetPage(name: '/order_confirm', page: () => OrderConfirmationPage()),
-        // GetPage(name: '/orders', page: () => MyOrdersPage()),
-        // GetPage(name: '/notifications', page: () => NotificationPage())
-      ],
+      initialRoute: RouteHelper.splash,
+      getPages: RouteHelper.appPages,
     );
   }
 }

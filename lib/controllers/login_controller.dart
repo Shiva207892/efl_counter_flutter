@@ -1,4 +1,5 @@
 import 'package:efl_counter/common/custom_toast.dart';
+import 'package:efl_counter/common/route_helper.dart';
 import 'package:efl_counter/controllers/user_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -50,7 +51,7 @@ class LoginController extends GetxController {
         if ('${value.additionalUserInfo?.isNewUser}' == 'true') {
           await Get.find<UserController>().addUserData();
         }
-        Get.toNamed('/splash');
+        Get.offAllNamed(RouteHelper.splash);
       } catch (e) {
         if (kDebugMode) {
           print('Error: $e');

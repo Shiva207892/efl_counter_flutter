@@ -1,3 +1,5 @@
+import 'package:efl_counter/common/route_helper.dart';
+import 'package:efl_counter/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/user_controller.dart';
@@ -12,9 +14,10 @@ class SplashScreen extends StatelessWidget {
     userController.getUserData().then((value) {
       if (value == true) {
         if (userController.userStatus.value == 'Pending') {
-          if (Get.currentRoute != '/profile') {
+          print('current   ${Get.currentRoute}');
+          if (Get.currentRoute != RouteHelper.profile) {
             Get.offAllNamed(
-              '/profile',
+              RouteHelper.profile,
               parameters: {
                 'phone': userController.userPhone.value,
                 'photo': userController.userPhoto.value,
@@ -27,12 +30,12 @@ class SplashScreen extends StatelessWidget {
             );
           }
         } else {
-          if (Get.currentRoute != '/home') {
-            Get.offAllNamed('/home');
+          if (Get.currentRoute != RouteHelper.home) {
+            Get.offAllNamed(RouteHelper.home);
           }
         }
       } else {
-        Get.offAllNamed('/login');
+        Get.offAllNamed(RouteHelper.login);
       }
     });
 
@@ -42,7 +45,7 @@ class SplashScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [CircularProgressIndicator(color: Colors.green)],
+            children: [CircularProgressIndicator(color: AppColors.primaryColor)],
           ),
         ),
       ),
