@@ -28,6 +28,7 @@ class TextInputTableState extends State<TextInputTable> {
   @override
   void initState() {
     super.initState();
+
   }
 
   @override

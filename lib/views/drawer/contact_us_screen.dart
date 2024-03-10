@@ -4,7 +4,7 @@ import 'package:efl_counter/utils/dimensions.dart';
 import 'package:efl_counter/widgets/base_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../common/styles.dart';
 import '../../utils/app_colors.dart';
 
 class ContactUsScreen extends StatelessWidget {
@@ -25,7 +25,7 @@ class ContactUsScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(Dimensions.paddingSizeLargest),
                   child: Column(children: [
                     Expanded(child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           image: DecorationImage(
                               fit: BoxFit.cover,
                               image: AssetImage(
@@ -46,43 +46,43 @@ class ContactUsScreen extends StatelessWidget {
                           children: [
                           Row(mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('Technical Issue', style: GoogleFonts.inter(fontSize: Dimensions.fontSizeExtraLarge, fontWeight: FontWeight.bold),),
+                              Text('Technical Issue', style: poppinsRegular.copyWith(fontSize: Dimensions.fontSizeExtraLarge, fontWeight: FontWeight.bold),),
                             ],
                           ),
                           Row(mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('connect@electricfuel.co.in', style: GoogleFonts.inter(fontSize: Dimensions.fontSizeExtraLarge, fontWeight: FontWeight.w300),),
+                              Text('connect@electricfuel.co.in', style: poppinsRegular.copyWith(fontSize: Dimensions.fontSizeExtraLarge, fontWeight: FontWeight.w300),),
                             ],
                           ),
-                          SizedBox(height: Dimensions.paddingSizeLargest),
+                          const SizedBox(height: Dimensions.paddingSizeLargest),
 
                           Row(mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('+91 8121002815 (Kashinath)', style: GoogleFonts.inter(fontSize: Dimensions.fontSizeExtraLarge, fontWeight: FontWeight.w300),),
+                              Text('+91 8121002815 (Kashinath)', style: poppinsRegular.copyWith(fontSize: Dimensions.fontSizeExtraLarge, fontWeight: FontWeight.w300),),
                             ],
                           ),
                           Row(mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('+91 8121009283 (Sriman)', style: GoogleFonts.inter(fontSize: Dimensions.fontSizeExtraLarge, fontWeight: FontWeight.w300),),
+                              Text('+91 8121009283 (Sriman)', style:poppinsRegular.copyWith(fontSize: Dimensions.fontSizeExtraLarge, fontWeight: FontWeight.w300),),
                             ],
                           ),
-                          SizedBox(height: Dimensions.paddingSizeLargest),
+                          const SizedBox(height: Dimensions.paddingSizeLargest),
 
                           Row(mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('Official web', style: GoogleFonts.inter(fontSize: Dimensions.fontSizeExtraLarge, fontWeight: FontWeight.bold),),
+                              Text('Official web', style: poppinsRegular.copyWith(fontSize: Dimensions.fontSizeExtraLarge, fontWeight: FontWeight.bold),),
                             ],
                           ),
                           Row(mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('www.electricfuel.co.in', style: GoogleFonts.inter(fontSize: Dimensions.fontSizeExtraLarge, fontWeight: FontWeight.w300),),
+                              Text('www.electricfuel.co.in', style: poppinsRegular.copyWith(fontSize: Dimensions.fontSizeExtraLarge, fontWeight: FontWeight.w300),),
                             ],
                           ),
 
                         ],),
                       ),
                     )),
-                    SizedBox(height: Dimensions.paddingSizeLargest),
+                    const SizedBox(height: Dimensions.paddingSizeLargest),
                   ],),
                 )
             )

@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:efl_counter/common/custom_toast.dart';
+import 'package:efl_counter/common/get_storage.dart';
+import 'package:efl_counter/common/route_helper.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,7 +22,7 @@ class UserController extends GetxController {
   RxString userLastName = ''.obs;
   RxString userEmail = ''.obs;
   RxString userPhone = ''.obs;
-  RxString userStatus = ''.obs;
+  RxString userStatus = 'Pending'.obs;
   RxString userAddress = ''.obs;
   RxList<String> userHubs = <String>[].obs;
 
@@ -50,7 +53,8 @@ class UserController extends GetxController {
         DocumentReference userRef = usersCollection.doc(userId.value);
 
         // Listen for real-time updates and assign the subscription to _userSubscription
-        _userSubscription = userRef.snapshots().listen((DocumentSnapshot userSnapshot) async {
+        _userSubscription =
+            userRef.snapshots().listen((DocumentSnapshot userSnapshot) async {
           if (userSnapshot.exists) {
             var userData = userSnapshot.data() as Map<String, dynamic>;
             // Update user data based on userSnapshot
@@ -58,18 +62,26 @@ class UserController extends GetxController {
             userIsOnline.value = userData['isOnline'] ?? true;
             userProfileLocked.value = userData['profileLock'] ?? false;
             userPhoto.value = userData['photo'] ?? '';
-            userStatus.value = userData['status'] ?? '';
+            userStatus.value = userData['status'] ?? 'Pending';
             userFirstName.value = userData['fname'] ?? '';
             userLastName.value = userData['lname'] ?? '';
             userEmail.value = userData['email'] ?? '';
             userAddress.value = userData['address'] ?? '';
             userHubs.value = (userData['hubs'] as List<dynamic>).cast<String>();
+
+            if (userStatus.value == 'Pending') {
+              Get.offAllNamed(RouteHelper.profile);
+            }
+            if (userStatus.value == 'Approved') {
+              Get.offAllNamed(RouteHelper.home);
+            }
           } else {
             if (kDebugMode) {
               print('User with ID $userId does not exist.');
             }
-            showCustomSnackbar(title: 'Error', message: 'Account with this phone number does not exist');
+            Toast.error('Account with this phone number does not exist');
             FirebaseAuth.instance.signOut();
+            clearData();
           }
         });
         return true;
@@ -128,7 +140,8 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> updateUserData(String firstName, String lastName, String email, String address) async {
+  Future<void> updateUserData(
+      String firstName, String lastName, String email, String address) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -143,7 +156,8 @@ class UserController extends GetxController {
         // If userProfile is not null, upload the file to Firebase Storage
         if (userProfile.value != null) {
           // Reference to the Firebase Storage location where the file will be stored
-          Reference storageRef = FirebaseStorage.instance.ref().child('UserProfiles').child(uid);
+          Reference storageRef =
+              FirebaseStorage.instance.ref().child('UserProfiles').child(uid);
 
           // Upload the file to Firebase Storage
           await storageRef.putFile(userProfile.value!);
@@ -175,7 +189,8 @@ class UserController extends GetxController {
           showCustomSnackbar(
               title: 'Success',
               message: 'Profile updated successfully',
-              duration: const Duration(seconds: 2), backColor: Colors.green);
+              duration: const Duration(seconds: 2),
+              backColor: Colors.green);
         }
       } else {
         if (kDebugMode) {
@@ -200,10 +215,8 @@ class UserController extends GetxController {
         DocumentReference userRef = usersCollection.doc(uid);
 
         // Update the data for the user document
-        await userRef.update({
-          'isOnline': isOnline,
-          'lastSeen': DateTime.now()
-        });
+        await userRef
+            .update({'isOnline': isOnline, 'lastSeen': DateTime.now()});
 
         // Update local user data after successful update
         userIsOnline.value = isOnline;
@@ -258,9 +271,10 @@ class UserController extends GetxController {
     try {
       await updateUserOnline(false);
       await FirebaseAuth.instance.signOut();
+      clearData();
       if (kDebugMode) {
         print("User signed out");
-        Get.offAllNamed('/login');
+        Get.offAllNamed(RouteHelper.login);
       }
     } catch (error) {
       if (kDebugMode) {

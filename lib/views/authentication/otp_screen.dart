@@ -1,16 +1,32 @@
+import 'package:efl_counter/common/get_storage.dart';
 import 'package:efl_counter/controllers/login_controller.dart';
+import 'package:efl_counter/utils/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
+import '../../common/styles.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/dimensions.dart';
 import '../../widgets/auth_top_image.dart';
 import '../../widgets/base_gradient.dart';
 import '../../widgets/custom_button.dart';
 
-class OtpScreen extends StatelessWidget {
+class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key});
+
+  @override
+  State<OtpScreen> createState() => _OtpScreenState();
+}
+
+class _OtpScreenState extends State<OtpScreen> {
+  String? phoneNumber;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    phoneNumber = getString(Constants.USER_PHONE_NUMBER);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,13 +79,13 @@ class OtpScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Text('OTP Verification',
-                          style: GoogleFonts.inter(
+                          style: poppinsRegular.copyWith(
                               fontSize: Dimensions.fontSizeLargest,
                               color: Colors.white70)),
                       const SizedBox(height: Dimensions.paddingSizeLargest),
                       Text(
-                          'Enter OTP sent to your\nmobile number xxxxxxx${loginController.phoneController.value.text.substring(7)}',
-                          style: GoogleFonts.inter(
+                          'Enter OTP sent to your\nmobile number xxxxxxx${phoneNumber?.substring(7)}',
+                          style: poppinsRegular.copyWith(
                               fontSize: Dimensions.fontSizeLarge,
                               color: Colors.white60,
                               fontWeight: FontWeight.w300)),

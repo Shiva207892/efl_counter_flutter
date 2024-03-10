@@ -15,7 +15,9 @@ class AppController extends GetxController {
     // TODO: implement onInit
     super.onInit();
     // Initialize the subscription to listen for changes in connectivity
-    subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
       // This callback function will be called whenever the connectivity status changes
       // You can handle the connectivity change here
       handleConnectivityChange(result);
@@ -33,19 +35,19 @@ class AppController extends GetxController {
   void handleConnectivityChange(ConnectivityResult result) {
     switch (result) {
       case ConnectivityResult.none:
-      // No internet connection
-      // Handle the scenario when there is no internet connection
-      Toast.error('Network Error');
+        // No internet connection
+        // Handle the scenario when there is no internet connection
+        Toast.error('Network Error');
         break;
       case ConnectivityResult.wifi:
-      // Connected to WiFi network
-      // Handle the scenario when connected to a WiFi network
+        // Connected to WiFi network
+        // Handle the scenario when connected to a WiFi network
         Toast.success('Network Connected');
 
         break;
       case ConnectivityResult.mobile:
-      // Connected to mobile network
-      // Handle the scenario when connected to a mobile network
+        // Connected to mobile network
+        // Handle the scenario when connected to a mobile network
         Toast.success('Network Connected');
         break;
       default:
@@ -69,10 +71,9 @@ class AppController extends GetxController {
       // Increment the date by 1 day
       DateTime newDate = currentDate.add(const Duration(days: 1));
 
-      // Update the Rx<DateTime> variable with the new date
-      currentSelectedDate.value = newDate;
-      final hubsController = Get.find<HubsController>();
-      hubsController.updateSelectedHub('');
+      setCurrentSelectedDate(newDate);
+    } else {
+      Toast.error('Can not select future dates');
     }
   }
 
@@ -90,15 +91,19 @@ class AppController extends GetxController {
     // Decrement the date by 1 day
     DateTime newDate = currentDate.subtract(const Duration(days: 1));
 
-    // Update the Rx<DateTime> variable with the new date
-    currentSelectedDate.value = newDate;
-    final hubsController = Get.find<HubsController>();
-    hubsController.updateSelectedHub('');
+    setCurrentSelectedDate(newDate);
   }
 
   void setCurrentSelectedDate(DateTime selectedDate) {
-    currentSelectedDate.value = selectedDate;
-    final hubsController = Get.find<HubsController>();
-    hubsController.updateSelectedHub('');
+    final DateTime today = DateTime.now();
+    final Duration difference = today.difference(selectedDate).abs();
+
+    if (difference.inDays <= 7) {
+      currentSelectedDate.value = selectedDate;
+      final hubsController = Get.find<HubsController>();
+      hubsController.updateSelectedHub(hubsController.hubIds[0]);
+    } else {
+      Toast.error("Can not select more than 7 days ago.");
+    }
   }
 }

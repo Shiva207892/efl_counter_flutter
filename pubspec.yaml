@@ -48,7 +48,6 @@ dependencies:
   image_cropper:
   get:
   get_storage:
-  google_fonts:
   pinput:
   intl:
   cached_network_image:

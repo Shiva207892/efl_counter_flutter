@@ -1,55 +1,66 @@
-import 'package:efl_counter/common/route_helper.dart';
+import 'package:efl_counter/common/custom_toast.dart';
+import 'package:efl_counter/common/get_storage.dart';
+import 'package:efl_counter/common/styles.dart';
 import 'package:efl_counter/controllers/login_controller.dart';
 import 'package:efl_counter/utils/app_colors.dart';
+import 'package:efl_counter/utils/app_constants.dart';
 import 'package:efl_counter/utils/app_pictures.dart';
+import 'package:efl_counter/views/authentication/phone_authentication_methods.dart';
 import 'package:efl_counter/widgets/base_gradient.dart';
 import 'package:efl_counter/widgets/custom_button.dart';
 import 'package:efl_counter/widgets/custom_dialog.dart';
-import 'package:efl_counter/widgets/custom_snack_bar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../utils/dimensions.dart';
 import '../../widgets/auth_top_image.dart';
 import '../../widgets/custom_text_field.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final loginController = Get.put(LoginController());
+  State<LoginScreen> createState() => _LoginScreenState();
+}
 
-    var agreeText = GoogleFonts.inter(
-        color: Colors.white54,
-        fontSize: Dimensions.fontSizeDefault,
-        fontWeight: FontWeight.w300);
-    var underLinedText = GoogleFonts.inter(
-        color: Colors.orange.shade400,
-        fontSize: Dimensions.fontSizeLarge,
-        fontWeight: FontWeight.bold,
-        decoration: TextDecoration.underline);
+class _LoginScreenState extends State<LoginScreen> {
 
-    void submit() {
-      if (loginController.phoneController.value.text.length == 10) {
-        showCustomDialogTwoActioned(
-            context,
-            'We will be verifying the phone number:',
-            '+91 ${loginController.phoneController.value.text}\n\n Is this OK, or would you like to edit the number?',
-            'CONFIRM', () {
-          Navigator.of(context).pop();
-          loginController.isOtpRequested.value = true;
-          getOtp(context, loginController.phoneController.value.text);
-        }, 'EDIT', () => Navigator.of(context).pop());
-      } else {
-        showCustomSnackbar(
-            title: 'Error',
-            message: 'Enter complete phone number please',
-            duration: const Duration(seconds: 1));
-      }
+  final loginController = Get.put(LoginController());
+
+  var phoneController = TextEditingController();
+
+  var agreeText = poppinsRegular;
+  var underLinedText = poppinsBold.copyWith(
+      color: Colors.orange.shade400,
+      fontSize: Dimensions.fontSizeLarge,
+      fontWeight: FontWeight.bold,
+      decoration: TextDecoration.underline);
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    phoneController.clear();
+  }
+
+  void submit() {
+    if (phoneController.text.length == 10) {
+      showCustomDialogTwoActioned(
+          context,
+          'We will be verifying the phone number:',
+          '+91 ${phoneController.text}\n\n Is this OK, or would you like to edit the number?',
+          'CONFIRM', () {
+            setData(Constants.USER_PHONE_NUMBER, phoneController.text);
+        Get.back();
+        loginController.isOtpRequested.value = true;
+        getOtp();
+      }, 'EDIT', () => Get.back());
+    } else {
+      Toast.error('Enter complete phone number please');
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
       body: SafeArea(
@@ -64,19 +75,19 @@ class LoginScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Text('Login',
-                        style: GoogleFonts.inter(
+                        style: poppinsRegular.copyWith(
                             fontSize: Dimensions.fontSizeLargest,
                             color: Colors.white)),
                     const SizedBox(height: Dimensions.paddingSizeDefault),
                     Text('Enter your mobile number to continue.',
-                        style: GoogleFonts.inter(
+                        style: poppinsRegular.copyWith(
                             color: Colors.white,
                             fontSize: Dimensions.fontSizeLarge,
                             fontWeight: FontWeight.w300)),
                     const SizedBox(height: Dimensions.paddingSizeLargest),
                     Obx(
                       () => CustomTextField(
-                          controller: loginController.phoneController.value,
+                          controller: phoneController,
                           enabled: loginController.isOtpRequested.isFalse,
                           hintText: 'Enter your mobile number',
                           prefixImage: AppPictures.phoneIcon,
@@ -136,34 +147,6 @@ class LoginScreen extends StatelessWidget {
       //     ),
       //   ],),
       // ),
-    );
-  }
-
-  getOtp(BuildContext context, String phoneNumber) async {
-    final loginController = Get.find<LoginController>();
-
-    String phone = '+91$phoneNumber';
-    await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: phone,
-      verificationCompleted: (PhoneAuthCredential credential) {
-        loginController.loginOtp.value = credential.smsCode!;
-        loginController.loginVerificationId.value = credential.verificationId!;
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        if (e.code == 'invalid-phone-number') {
-          showCustomSnackbar(
-              title: 'Invalid Number',
-              message: 'The provided phone number is not valid.');
-        }
-      },
-      codeSent: (String verificationid, int? resendtoken) {
-        loginController.loginVerificationId.value = verificationid;
-        Get.toNamed(RouteHelper.otp);
-      },
-      timeout: const Duration(seconds: 120),
-      codeAutoRetrievalTimeout: (String verificationId) {
-        print('Code retrieval timed out.....');
-      },
     );
   }
 }

@@ -1,7 +1,5 @@
 import 'package:efl_counter/controllers/add_data_controller.dart';
-import 'package:efl_counter/controllers/app_controller.dart';
 import 'package:efl_counter/controllers/hub_controller.dart';
-import 'package:efl_counter/controllers/user_controller.dart';
 import 'package:efl_counter/utils/dimensions.dart';
 import 'package:efl_counter/views/screens/widgets/customer_listing.dart';
 import 'package:efl_counter/views/screens/widgets/fixed_footer_row.dart';
@@ -12,6 +10,7 @@ import 'package:get/get.dart';
 import '../../common/success_dialog.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/data_input_table.dart';
+import '../dashboard/app_exit_dialog.dart';
 import 'widgets/fixed_header_row.dart';
 
 class AddDataScreen extends StatelessWidget {
@@ -20,11 +19,13 @@ class AddDataScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dataController = Get.find<AddDataController>();
-    final hubsController =
-        Get.put(HubsController(hubIds: Get.find<UserController>().userHubs));
+    final hubsController = Get.find<HubsController>();
 
     return WillPopScope(
-      onWillPop: () async => false,
+      onWillPop: () async => await showDialog(
+        context: context,
+        builder: (context) => const AppExitDialog(),
+      ),
       child: Scaffold(
         body: SafeArea(
             child: baseGradientContainer(
@@ -65,21 +66,21 @@ class AddDataScreen extends StatelessWidget {
                     CustomButton(
                         buttonText: 'Submit',
                         onTap: () {
-                          dataController
-                              .submitReport(context)
-                              .then((value) {
-                                if(value != null) {
-                                  showDialog(
+                          dataController.submitReport(context).then((value) {
+                            if (value != null) {
+                              showDialog(
                                       context: context,
                                       builder: (BuildContext context) =>
-                                          ReportSubmitDialog(reportData: value)).then((val) {
-                                    if (val == true) {
-                                      dataController.clearCounters();
-                                      dataController.clearControllers();
-                                      Get.find<AppController>().setCurrentSelectedDate(DateTime.now());
-                                    }
-                                  });
+                                          ReportSubmitDialog(reportData: value))
+                                  .then((val) {
+                                if (val == true) {
+                                  dataController.clearCounters();
+                                  dataController.clearControllers();
+                                  // Get.find<AppController>()
+                                  //     .setCurrentSelectedDate(DateTime.now());
                                 }
+                              });
+                            }
                           });
                         }),
                   ],

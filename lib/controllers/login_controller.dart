@@ -9,7 +9,6 @@ import 'package:sms_autofill/sms_autofill.dart';
 
 class LoginController extends GetxController {
   RxBool isOtpRequested = false.obs;
-  Rx<TextEditingController> phoneController = TextEditingController().obs;
 
   RxString loginOtp = '000000'.obs;
   RxString loginVerificationId = 'verificationid'.obs;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../common/styles.dart';
 import '../utils/dimensions.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -45,7 +45,7 @@ class CustomTextField extends StatelessWidget {
                     fillColor: fillColor ?? const Color(0xFFEDEEF1),
                     hintText: hintText,
                     counterText: '',
-                    hintStyle: GoogleFonts.inter(
+                    hintStyle: poppinsRegular.copyWith(
                       color: Colors.grey,
                     ),
                     border: InputBorder.none,

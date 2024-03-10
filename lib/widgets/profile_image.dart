@@ -3,8 +3,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:efl_counter/controllers/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import '../common/styles.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_pictures.dart';
 import '../utils/dimensions.dart';
@@ -124,7 +124,7 @@ Widget profileNameImage(BuildContext context, double imageSize, bool editable) {
               ),
               Text(
                 '${userController.userFirstName.value} ${userController.userLastName.value}',
-                style: GoogleFonts.inter(
+                style: poppinsRegular.copyWith(
                   color: AppColors.primaryColor,
                   fontWeight: FontWeight.bold,
                   fontSize: Dimensions.fontSizeExtraLarge,

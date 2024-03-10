@@ -17,7 +17,7 @@ class HubsController extends GetxController {
   final CollectionReference _hubsCollection =
       FirebaseFirestore.instance.collection('Hubs');
 
-  var _customersCollection = FirebaseFirestore.instance.collection('Customers');
+  final _customersCollection = FirebaseFirestore.instance.collection('Customers');
 
   // Rx variables to hold the hubs data
   RxList<QueryDocumentSnapshot<Object?>> customersList =
@@ -63,6 +63,7 @@ class HubsController extends GetxController {
             (selectedHubData.data() as Map<String, dynamic>?)?['customers'];
         if (customersList != null && customersList is List) {
           customers = customersList.map((e) => e.toString()).toList();
+          selectedCustomer.value = customers[0];
         }
       }
     }

@@ -1,11 +1,11 @@
 import 'package:efl_counter/utils/app_colors.dart';
 import 'package:efl_counter/utils/dimensions.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../common/styles.dart';
 
 void showCustomDialogTwoActioned(BuildContext context, String title, String message, String positiveAction, void Function() onConfirm, String negativeAction, void Function() onCancel) {
-  var titleStyle = GoogleFonts.inter(fontSize: Dimensions.fontSizeLarge, fontWeight: FontWeight.w500, color: AppColors.primaryColor);
-  var messageStyle = GoogleFonts.inter(fontSize: Dimensions.fontSizeDefault, fontWeight: FontWeight.w500);
+  var titleStyle = poppinsRegular.copyWith(fontSize: Dimensions.fontSizeLarge, fontWeight: FontWeight.w500, color: AppColors.primaryColor);
+  var messageStyle =poppinsRegular.copyWith(fontSize: Dimensions.fontSizeDefault, fontWeight: FontWeight.w500);
   var actionStyle = ElevatedButton.styleFrom(
       foregroundColor: Colors.white,
       backgroundColor: AppColors.primaryColor

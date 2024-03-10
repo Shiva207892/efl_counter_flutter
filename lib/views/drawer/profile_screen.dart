@@ -2,7 +2,7 @@ import 'package:efl_counter/controllers/user_controller.dart';
 import 'package:efl_counter/widgets/custom_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../common/styles.dart';
 import '../../controllers/app_controller.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/dimensions.dart';
@@ -14,33 +14,28 @@ class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  ProfileScreenState createState() => ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class ProfileScreenState extends State<ProfileScreen> {
+  final appController = Get.find<AppController>();
+  final userController = Get.find<UserController>();
+
   final phoneController = TextEditingController();
   final fNameController = TextEditingController();
   final lNameController = TextEditingController();
   final emailController = TextEditingController();
   final addressController = TextEditingController();
 
-  final appController = Get.find<AppController>();
-  final userController = Get.find<UserController>();
-
   @override
   void initState() {
     super.initState();
 
-    final Map<String, dynamic> args = Get.parameters;
-
-    phoneController.text = args['phone'] ?? userController.userPhone.value;
-    fNameController.text =
-        args['firstName'] ?? userController.userFirstName.value;
-    lNameController.text =
-        args['lastName'] ?? userController.userLastName.value;
-    emailController.text = args['email'] ?? userController.userEmail.value;
-    addressController.text =
-        args['address'] ?? userController.userAddress.value;
+    phoneController.text = userController.userPhone.value;
+    fNameController.text = userController.userFirstName.value;
+    lNameController.text = userController.userLastName.value;
+    emailController.text = userController.userEmail.value;
+    addressController.text = userController.userAddress.value;
   }
 
   @override
@@ -55,7 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var normalFontStyle = GoogleFonts.inter(
+    var normalFontStyle = poppinsRegular.copyWith(
         color: AppColors.primaryColor,
         fontWeight: FontWeight.bold,
         fontSize: Dimensions.fontSizeDefault);
@@ -94,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   padding: const EdgeInsets.all(
                                       Dimensions.paddingSizeDefault),
                                   child: Text('Logout',
-                                      style: GoogleFonts.inter(
+                                      style: poppinsRegular.copyWith(
                                           color: AppColors.primaryColor,
                                           fontWeight: FontWeight.bold,
                                           fontSize: Dimensions.fontSizeDefault)),
@@ -112,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   }
                                 },
                                 child: Text('Pending',
-                                    style: GoogleFonts.inter(
+                                    style: poppinsRegular.copyWith(
                                         color: AppColors.pendingColor,
                                         fontWeight: FontWeight.bold,
                                         fontSize: Dimensions.fontSizeDefault)),
