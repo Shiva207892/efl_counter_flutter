@@ -1,5 +1,6 @@
 import 'package:efl_counter/common/route_helper.dart';
 import 'package:efl_counter/utils/app_colors.dart';
+import 'package:efl_counter/views/authentication/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/user_controller.dart';
@@ -10,8 +11,8 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userController = Get.find<UserController>();
-    wait(userController);
-    return const Scaffold(
+    userController.checkUser();
+    return userController.isUser.isFalse ? const LoginScreen() : const Scaffold(
       body: SafeArea(
         child: SizedBox.expand(
           child: Column(
