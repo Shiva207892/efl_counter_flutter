@@ -17,7 +17,9 @@ Future<void> main() async {
 
   await GetStorage.init();
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+      name: 'electric-fuel-counter',
+      options: DefaultFirebaseOptions.currentPlatform);
 
   if (kDebugMode) {
     print('firebase has been initialized');

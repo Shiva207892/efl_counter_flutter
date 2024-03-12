@@ -1,7 +1,6 @@
 import 'package:efl_counter/common/custom_toast.dart';
 import 'package:efl_counter/common/get_storage.dart';
 import 'package:efl_counter/common/styles.dart';
-import 'package:efl_counter/controllers/login_controller.dart';
 import 'package:efl_counter/utils/app_colors.dart';
 import 'package:efl_counter/utils/app_constants.dart';
 import 'package:efl_counter/utils/app_pictures.dart';
@@ -24,9 +23,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
-  final loginController = Get.put(LoginController());
-
   var phoneController = TextEditingController();
+  bool otpRequested = false;
 
   var agreeText = poppinsRegular;
   var underLinedText = poppinsBold.copyWith(
@@ -50,9 +48,11 @@ class _LoginScreenState extends State<LoginScreen> {
           '+91 ${phoneController.text}\n\n Is this OK, or would you like to edit the number?',
           'CONFIRM', () {
             setData(Constants.USER_PHONE_NUMBER, phoneController.text);
-        Get.back();
-        loginController.isOtpRequested.value = true;
-        getOtp();
+        setState(() {
+          otpRequested = true;
+        });
+        Future.delayed(Duration.zero, () => getOtp());
+            Get.back();
       }, 'EDIT', () => Get.back());
     } else {
       Toast.error('Enter complete phone number please');
@@ -85,24 +85,20 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontSize: Dimensions.fontSizeLarge,
                             fontWeight: FontWeight.w300)),
                     const SizedBox(height: Dimensions.paddingSizeLargest),
-                    Obx(
-                      () => CustomTextField(
+                    CustomTextField(
                           controller: phoneController,
-                          enabled: loginController.isOtpRequested.isFalse,
+                          enabled: !otpRequested,
                           hintText: 'Enter your mobile number',
                           prefixImage: AppPictures.phoneIcon,
                           keyboard: TextInputType.phone,
                           maxLength: 10,
                           fillColor: Colors.white),
-                    ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.2),
-                    Obx(
-                      () => loginController.isOtpRequested.isTrue
+                    otpRequested
                           ? const CircularProgressIndicator(
                               color: AppColors.primaryColor,
                             )
                           : CustomButton(buttonText: 'Verify', onTap: submit),
-                    ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.1)
                   ],
                 ),

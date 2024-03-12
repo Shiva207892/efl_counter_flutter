@@ -10,13 +10,13 @@ Widget customTextField(BuildContext context, int index, AddDataController dataCo
     focusNode: dataController.focusNodes[index],
     keyboardType: TextInputType.number,
     style: poppinsBold.copyWith(fontSize: Dimensions.fontSizeLargest, color: AppColors.primaryColor),
-    maxLength: 2,
+    maxLength: 4,
     maxLines: null,
     expands: true,
     textAlign: TextAlign.center,
     onChanged: (value) {
       dataController.checkAndUpdateData();
-      if (value.length == 2 && index < dataController.focusNodes.length-1) {
+      if (value.length == 4 && index < dataController.focusNodes.length-1) {
         FocusScope.of(context).requestFocus(dataController.focusNodes[index+1]);
       }
     },

@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:efl_counter/common/custom_toast.dart';
 import 'package:efl_counter/common/get_storage.dart';
-import 'package:efl_counter/common/route_helper.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../common/route_helper.dart';
 import '../widgets/custom_snack_bar.dart';
 
 class UserController extends GetxController {
@@ -29,12 +29,19 @@ class UserController extends GetxController {
   var usersCollection = FirebaseFirestore.instance.collection('Users');
   late StreamSubscription<DocumentSnapshot> _userSubscription;
 
-  @override
-  void onInit() {
-    super.onInit();
-    getUserData();
-    updateUserOnline(true);
-    updateUserFcm();
+  RxBool isUser = false.obs;
+
+  Future<void> checkUser() async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      isUser.value = true;
+      await getUserData();
+      await updateUserOnline(true);
+      await updateUserFcm();
+    } else {
+      isUser.value = false;
+    }
   }
 
   @override
@@ -44,7 +51,7 @@ class UserController extends GetxController {
     super.onClose();
   }
 
-  Future<bool?> getUserData() async {
+  Future<void> getUserData() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
 
@@ -69,12 +76,8 @@ class UserController extends GetxController {
             userAddress.value = userData['address'] ?? '';
             userHubs.value = (userData['hubs'] as List<dynamic>).cast<String>();
 
-            if (userStatus.value == 'Pending') {
-              Get.offAllNamed(RouteHelper.profile);
-            }
-            if (userStatus.value == 'Approved') {
-              Get.offAllNamed(RouteHelper.home);
-            }
+            if(userStatus.value == 'Pending') Get.offAllNamed(RouteHelper.profile);
+            if(userStatus.value == 'Approved') Get.offAllNamed(RouteHelper.home);
           } else {
             if (kDebugMode) {
               print('User with ID $userId does not exist.');
@@ -84,20 +87,16 @@ class UserController extends GetxController {
             clearData();
           }
         });
-        return true;
       } else {
         if (kDebugMode) {
           print("User not signed in.");
-          return false;
         }
       }
     } catch (e) {
       if (kDebugMode) {
         print('Failed to get user: $e');
-        return false;
       }
     }
-    return null;
   }
 
   Future<void> addUserData() async {

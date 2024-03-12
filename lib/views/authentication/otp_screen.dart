@@ -1,8 +1,7 @@
 import 'package:efl_counter/common/get_storage.dart';
-import 'package:efl_counter/controllers/login_controller.dart';
 import 'package:efl_counter/utils/app_constants.dart';
+import 'package:efl_counter/views/authentication/phone_authentication_methods.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
 import '../../common/styles.dart';
 import '../../utils/app_colors.dart';
@@ -20,7 +19,7 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   String? phoneNumber;
-
+  final pinController = TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
@@ -30,10 +29,6 @@ class _OtpScreenState extends State<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final loginController = Get.find<LoginController>();
-
-    final pinController = TextEditingController();
-
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 56,
@@ -58,11 +53,8 @@ class _OtpScreenState extends State<OtpScreen> {
       ),
     );
 
-    pinController.text = loginController.loginOtp.value;
-
     return WillPopScope(
       onWillPop: () async {
-        loginController.isOtpRequested.value = false;
         return true;
       },
       child: Scaffold(
@@ -92,6 +84,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       const SizedBox(height: Dimensions.paddingSizeLargest),
                       Pinput(
                         length: 6,
+                        controller: pinController,
                         defaultPinTheme: defaultPinTheme,
                         focusedPinTheme: focusedPinTheme,
                         submittedPinTheme: submittedPinTheme,
@@ -100,16 +93,18 @@ class _OtpScreenState extends State<OtpScreen> {
                         },
                         pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
                         showCursor: true,
-                        onCompleted: (pin) =>
-                            loginController.loginOtp.value = pin,
+                        onCompleted: (pin) => print(pin)
                       ),
                       Container(
                           margin: EdgeInsets.only(
                               top: MediaQuery.of(context).size.height * 0.2),
                           child: CustomButton(
                               buttonText: 'SUBMIT',
-                              onTap: () =>
-                                  loginController.verifyOTPCode(context))),
+                              onTap: () {
+                                var loginOtp = pinController.text;
+                                print(loginOtp);
+                                verifyOTPCode(loginOtp);
+                              })),
                     ],
                   ),
                 )
